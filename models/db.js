@@ -1,70 +1,63 @@
-// Bring Mongoose into the app
-var mongoose = require( 'mongoose' );
-var dbURI    = require('../config').db.uri;
+/*
+ *  database object and initialization operations
+ *      - create database and initializes its tables if database doesn't exist
+        - create a default admin user (TODO)
+ *      -
+ */
+
+
+var sqlite3   = require('sqlite3').verbose();
+var User      = require('./User');
+var UserType  = require('./Constants').UserType;
+var fs        = require("fs");
+var dbFile    = "careDev.db";
+var dbExists  = fs.existsSync(dbFile);
+
+var db        = new sqlite3.Database(dbFile);
+
+// TODO: default admin parameters if there's no admin inside of the database
 var defaultAdmin = require('../config').default.admin;
 
-User = require('./User');
-var UserType  = require('./Constants').UserType;
+/*
+ * function initDB - Database initialization
+ *  - Create the database if it does not exist
+    -
+ */
+var initDB = function () {
 
-// Create the database connection
-mongoose.connect(dbURI);
+    //serialized queries (step by step execution)
+    db.serialize(function() {
 
-// CONNECTION EVENTS
-// When successfully connected
-mongoose.connection.on('connected', function () {
-  console.log('Mongoose default connection open to ' + dbURI);
+    db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='bookmarks'",
+        function(err, rows) {
+            if(err !== null) {
+                console.log(err);
+            }
+            else if(rows === undefined) {
+                var query = 'CREATE TABLE "users" ' +
+                   '("_id" INTEGER PRIMARY KEY AUTOINCREMENT, ' +
+                   '"email" TEXT, ' +
+                   '"username" TEXT, ' +
+                   '"password" TEXT)'
+                db.run(query, function(err) {
 
-      User.findOne({userType:UserType.ADMIN}, function (err,admin) {
-         if(err)
-         {
-             console.log("erro when searching for an admin account : "+ err);
-             return;
-         }
-         else {
-             if(admin)
-                console.log("An admin exists ( " + admin.name + " | " + admin.userType + "  | pass: "  + admin.password + ")");
-             else
-             {
-                 admin = new User(defaultAdmin);
-                 admin.password = defaultAdmin.password;
-                 admin.setPassword(defaultAdmin.password,function (err,p) {
-                     if(err) return console.log("error when setting the user password : " + err);
-                 });
+                    if(err !== null) {
+                        console.log("[INIT DB] Cannot create table 'Users' - Table may exists");
+                        //console.log(err);
+                    }
+                    else {
+                        console.log("[INIT DB] SQL Table 'users' initialized.");
+                    }
+                });
+            }
+            else {
+                console.log("[INIT DB] SQL Table 'users' already initialized.");
+            }
+        });
+        });
 
-                 console.log(defaultAdmin.password);
-                 admin.save(function(err, admin) {
-                     if (err) return console.error(" Could not save admin user. error code: " + err);
+};
 
-                     console.log(admin);
-                 });
-             }
-         }
-
-      });
-
-
-});
-
-// If the connection throws an error
-mongoose.connection.on('error',function (err) {
-  console.log('Mongoose default connection error: ' + err);
-});
-
-// When the connection is disconnected
-mongoose.connection.on('disconnected', function () {
-  console.log('Mongoose default connection disconnected');
-});
-
-// If the Node process ends, close the Mongoose connection
-process.on('SIGINT', function() {
-  mongoose.connection.close(function () {
-    console.log('Mongoose default connection disconnected through app termination');
-    process.exit(0);
-  });
-});
-
-// BRING IN THE SCHEMAS & MODELS
-
-//require('./chatRoom');
-//require('./User');
-//require('./Message');
+//Database client object and initialization function exports
+exports.initialize = initDB;
+exports.db = db;
