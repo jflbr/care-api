@@ -5,8 +5,11 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
+var routes  = require('./routes/index');
+var users   = require('./routes/users');
+var userAPI = require('./routes/user');
+var travelAPI = require('./routes/travel');
+
 var expressSession = require('express-session');
 var flash = require('connect-flash');
 var passportWrapper = require('./auth/passport');
@@ -46,6 +49,8 @@ passportWrapper.setup(app);
 app.use('/', routes);
 app.use('/users', users);
 app.use('/auth', authRouter());
+app.use('/user', userAPI);
+app.use('/travel', travelAPI);
 
 
 // catch 404 and forward to error handler
