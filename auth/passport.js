@@ -1,36 +1,55 @@
-var passport =  require('passport');
+/*
+ *  passport-local user serialization et deserialization
+ *      -
+ */
+
+var passport      =  require('passport');
 var passportLacal = require('passport-local');
-var User = require('../models/User');
+var SqliteUser    = require('../models/User').user;
+var UserManager_  =   require('../models/User').userManager;
+var UserManager   =   new UserManager_();
 
 function setup(app) {
-    console.log('setting up passport stuff...');
+    console.log('[PASSPORT INIT] Initializing passport ...');
     app.use(passport.initialize());
     app.use(passport.session());
 
 
 
-
-
     passport.serializeUser ( function(user,done){
-        return done(null, user._id);
-        }
-    );
+        UserManager.findUserByEmail( user.email,function(err, users) {
+            if(err) {
+                console.error("[PASSPORT] User serialization failed : " + err);
+                return done(err,false);
+            }
+            else {
+                user = users[0];
+                return done(null,user._id);
+            }
+        });
+    });
+
 
     passport.deserializeUser( function(id,done){
 
-        User.findById(id,function (err, user) {
+        UserManager.findUserById(id,function(err, users) {
             if(err) {
-                console.error("passport.deserializeUser failed : " + err);
+                console.error("[PASSPORT] User deserialization failed : " + err);
                 return done(err,false);
-            }else{
+            } else {
+
+
+                user = users[0];
+                //user._id = id;
+                //var user = new SqliteUser(user_.username,user_.email, user_.password);
+                //user._id = user_.id;
                 return done(null,user);
             }
-            });
+        });
         }
     );
 
     require('./localStrategy')();
-
 }
 
 
