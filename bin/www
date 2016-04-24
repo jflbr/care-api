@@ -8,7 +8,10 @@ var app = require('../app');
 var debug = require('debug')('care-api:server');
 var http = require('http');
 
-var db   = require('../models/db');
+var database   = require('../models/db');
+
+//Initialize database
+database.initialize();
 
 /**
  * Get port from environment and store in Express.
