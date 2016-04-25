@@ -7,7 +7,7 @@
 
 var LocalStrategy = require('passport-local').Strategy;
 var passport      = require('passport');
-var SqliteUser    = require('../models/User').user;
+var User          = require('../models/User').user;
 var UserManager_  = require('../models/User').userManager;
 var UserManager   = new UserManager_();
 
@@ -88,7 +88,7 @@ function setup() {
                      */
 
                     // create the user - TODO : deprecate password parameter and use a setter for encryption
-                    var newUser = new SqliteUser(req.body.username,email, password);
+                    var newUser = new User(req.body.username,email, password);
 
                     // save the user
                     UserManager.saveUser(newUser,function(err) {
