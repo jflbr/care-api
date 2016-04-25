@@ -20,6 +20,7 @@ var User_ = function(username,email, password) {
     this.name = "-";
     this.email = email;
     this.password = password;
+    this.keyCar   = null; //carKey
 
     this.isValidPassword = function(password)
     {
