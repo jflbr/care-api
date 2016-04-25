@@ -1,0 +1,66 @@
+/* dataType in Pollen, Temperature, Humidity, Pollution*/
+CREATE TABLE IF NOT EXISTS Stations(idStation INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, lat REAL, lngtude REAL, dataType TEXT);
+CREATE TABLE IF NOT EXISTS DataValues(idData INTEGER PRIMARY KEY AUTOINCREMENT, value REAL, dataDate DATE, keyStation INTEGER, FOREIGN KEY(keyStation) REFERENCES Stations(idStation));
+CREATE TABLE IF NOT EXISTS Users(_id INTEGER PRIMARY KEY AUTOINCREMENT, userName TEXT, email TEXT UNIQUE, password TEXT, keyCar INTEGER, FOREIGN KEY(keyCar) REFERENCES Cars(idCar));
+CREATE TABLE IF NOT EXISTS Cars(idCar INTEGER PRIMARY KEY AUTOINCREMENT, CO2Level REAL);
+CREATE TABLE IF NOT EXISTS Travels(idTravel INTEGER PRIMARY KEY AUTOINCREMENT, lat1 REAL, lngtude1 REAL, lat2 REAL, lngtude2 REAL, travelMode TEXT, travelDate DATETIME, keyUser TEXT, FOREIGN KEY(keyUser) REFERENCES Users(email));
+
+/* Pollution */
+INSERT INTO Stations values(1, 'Roanne', 						46.0413, 4.0747, 'Pollution');
+INSERT INTO Stations values(2, 'Haut-Beaujolais', 				45.9615, 4.4657, 'Pollution');
+INSERT INTO Stations values(3, 'Villefrance', 					45.9864, 4.7193, 'Pollution');
+INSERT INTO Stations values(4, 'Val d''azergues', 				46.0413, 4.0747, 'Pollution');
+INSERT INTO Stations values(5, 'Tunnel Croix Rousse', 			46.0413, 4.0747, 'Pollution');
+INSERT INTO Stations values(6, 'Lyon St Just', 					46.0413, 4.0747, 'Pollution');
+INSERT INTO Stations values(7, 'Lyon Centre', 					46.0413, 4.0747, 'Pollution');
+INSERT INTO Stations values(8, 'Lyon Jean Jaures', 				46.0413, 4.0747, 'Pollution');
+INSERT INTO Stations values(9, 'Lyon Gerland', 					46.0413, 4.0747, 'Pollution');
+INSERT INTO Stations values(10, 'A7 Sud Lyonnais', 				46.0413, 4.0747, 'Pollution');
+INSERT INTO Stations values(11, 'Villeurbanne', 				46.0413, 4.0747, 'Pollution');
+INSERT INTO Stations values(12, 'Sud Lyonnais Feyzin', 			45.6640, 4.8458, 'Pollution');
+INSERT INTO Stations values(13, 'Sud Lyonnais Ternay', 			45.6019, 4.8026, 'Pollution');
+INSERT INTO Stations values(14, 'Est Lyonnais Vaulx en Velin', 	45.7790, 4.9250, 'Pollution');
+INSERT INTO Stations values(15, 'Lyon peripherique', 			45.7747, 4.8986, 'Pollution');
+
+INSERT INTO DataValues values(NULL, 12.29 * 0.36, 	CURRENT_DATE, 10);
+INSERT INTO DataValues values(NULL, 10.88 * 0.36, 	CURRENT_DATE, 9);
+INSERT INTO DataValues values(NULL, 9.0 * 0.36, 	CURRENT_DATE, 11);
+INSERT INTO DataValues values(NULL, 11.75 * 0.36, 	CURRENT_DATE, 12);
+INSERT INTO DataValues values(NULL, 11.16 * 0.36, 	CURRENT_DATE, 13);
+INSERT INTO DataValues values(NULL, 8.62 * 0.36, 	CURRENT_DATE, 14);
+INSERT INTO DataValues values(NULL, 4.96 * 0.36, 	CURRENT_DATE, 3);
+INSERT INTO DataValues values(NULL, 9.5 * 0.36, 	CURRENT_DATE, 7);
+INSERT INTO DataValues values(NULL, 12.5 * 0.36, 	CURRENT_DATE, 5);
+INSERT INTO DataValues values(NULL, 8.0 * 0.36, 	CURRENT_DATE, 15);
+INSERT INTO DataValues values(NULL, 11.41 * 0.36, 	CURRENT_DATE, 8);
+
+/* Temperature */
+INSERT INTO Stations values(16, 'Lyon Bron', 					45.4334, 4.5616, 'Temperature');
+INSERT INTO DataValues values(NULL, 10.8, 						CURRENT_DATE, 16);
+
+INSERT INTO Stations values(17, 'Lyon St Exupery', 				45.4335, 5.0440, 'Temperature');
+INSERT INTO DataValues values(NULL, 9.8, 						CURRENT_DATE, 17);
+
+/* Pollen */
+INSERT INTO Stations values(18, 'Lyon Gerland', 				45.450, 4.5060, 'Pollen');
+INSERT INTO DataValues values(NULL, 5, 							CURRENT_DATE, 18);
+
+/* Humidity */
+INSERT INTO Stations values(19, 'Lyon Bron', 					45.4334, 4.5616, 'Humidity');
+INSERT INTO DataValues values(NULL, 72, 						CURRENT_DATE, 19);
+
+INSERT INTO Stations values(20, 'Lyon St Exupery', 				45.4335, 5.0440, 'Humidity');
+INSERT INTO DataValues values(NULL, 75, 						CURRENT_DATE, 20);
+
+
+/* User */
+INSERT INTO Cars VALUES(1, 65.0);
+INSERT INTO Users VALUES(NULL, 'Jeyfel codeur fou', 'jeyfelCodeurFou@gmail.com', '1234', 1);
+INSERT INTO Travels VALUES(NULL, 45.7682, 4.8222, 45.7820, 4.9226, 'Car', CURRENT_TIMESTAMP, 'jeyfelCodeurFou@gmail.com');
+
+
+
+
+
+
+
