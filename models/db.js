@@ -11,6 +11,8 @@ var User      = require('./User');
 var UserType  = require('./Constants').UserType;
 var fs        = require("fs");
 var dbFile    = "careDev.db";
+var dbFile    = "careDb.sqlite";
+
 var dbExists  = fs.existsSync(dbFile);
 
 var db        = new sqlite3.Database(dbFile);
@@ -28,12 +30,17 @@ var initDB = function () {
     //serialized queries (step by step execution)
     db.serialize(function() {
 
-    db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='bookmarks'",
+    db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='users'",
         function(err, rows) {
             if(err !== null) {
                 console.log(err);
             }
             else if(rows === undefined) {
+
+                /*  TODO: parse initDB.txt to initialize the database structure
+                 *  The query below only create a user table!
+                 *  For testing purpose we use an already initialized database (careDb.sqlite)
+                 */
                 var query = 'CREATE TABLE "users" ' +
                    '("_id" INTEGER PRIMARY KEY AUTOINCREMENT, ' +
                    '"email" TEXT, ' +

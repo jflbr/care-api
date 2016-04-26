@@ -3,10 +3,6 @@
  *      -
  */
 
-var passportLocalMongoose = require('passport-local-mongoose');
-var collectionsConfig     = require('../config').db.collections;
-var modelsConfig          = require('../config').db.models;
-
 var UserType  = require('./Constants').UserType;
 var db        = require('../models/db').db;
 
@@ -14,12 +10,13 @@ var db        = require('../models/db').db;
 /*
  * User model
  */
-var User_ = function(username,email, password) {
+var User = function(username,email, password) {
     this._id = null;
     this.username = username;
     this.name = "-";
     this.email = email;
     this.password = password;
+    this.keyCar   = null; //carKey
 
     this.isValidPassword = function(password)
     {
@@ -90,10 +87,20 @@ var UserManager = function () {
             cb(err,rows);
           });
     };
+
+    /*
+     * function dbDataToUserObject
+     *  - convert retrieved data into a user instance
+     */
+    this.dbDataToUserObject = function (dbData) {
+        var user = new User(dbData.username,dbData.email, dbData.password);
+        user._id = dbData._id;
+        user.keyCar = dbData.keyCar;
+        return user;
 };
 
 
 // Export User model and UserManager service
 
-exports.user = User_;
+exports.user = User;
 exports.userManager = UserManager;
