@@ -6,8 +6,8 @@
 var passport      =  require('passport');
 var passportLacal = require('passport-local');
 var SqliteUser    = require('../models/User').user;
-var UserManager_  =   require('../models/User').userManager;
-var UserManager   =   new UserManager_();
+var UserManager_  = require('../models/User').userManager;
+var UserManager   = new UserManager_();
 
 function setup(app) {
     console.log('[PASSPORT INIT] Initializing passport ...');
