@@ -97,6 +97,8 @@ var UserManager = function () {
         user._id = dbData._id;
         user.keyCar = dbData.keyCar;
         return user;
+    };
+
 };
 
 
