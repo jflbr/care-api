@@ -45,7 +45,12 @@ var UserManager = function () {
         sqlRequest = "INSERT INTO users (email, username, password) " +
              "VALUES('" + user.email + "','" + user.username + "', '" + user.password + "')"
         db.run(sqlRequest, function(err) {
-            cb(err);
+            if(err){
+                cb(err);
+            }else {
+                user._id = this.lastID;
+                cb(err);
+            }
         });
       };
 
